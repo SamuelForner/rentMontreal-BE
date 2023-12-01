@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
 
-import { Iproperty } from '../models/properties';
-
-var Property = require('../models/properties.ts');
+import Property, { Iproperty } from '../models/properties';
 
 var express = require('express');
 
@@ -26,9 +24,17 @@ router.post('/add', (req: Request, res: Response) => {
   });
 });
 
+//Listing all properties
 router.get('/all', (req: Request, res: Response) => {
-  Property.find().then((data: Iproperty) => {
-    res.json({ propertiesList: data });
+  Property.find().then((data: Iproperty[]) => {
+    res.json(data);
+  });
+});
+
+//Get a property by id
+router.get('/:id', (req: Request, res: Response) => {
+  Property.findById(req.params.id).then((data) => {
+    res.json(data);
   });
 });
 
