@@ -35,4 +35,5 @@ const propertySchema = new Schema<Iproperty>({
   picture: String, //not required
 });
 const Property = model<Iproperty>('properties', propertySchema);
-module.exports = Property;
+
+export default model<Iproperty>('properties', propertySchema);
