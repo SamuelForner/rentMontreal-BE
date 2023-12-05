@@ -25,17 +25,28 @@ router.post('/add', (req: Request, res: Response) => {
 });
 
 //Listing all properties
+// => localhost:3000/properties/all
 router.get('/all', (req: Request, res: Response) => {
   Property.find().then((data: Iproperty[]) => {
     res.json(data);
   });
 });
 
+//Get property(ies) with filter
+// => localhost:3000/properties/filter?surfaceArea=1500m2
+router.get('/filter', (req: Request, res: Response) => {
+  Property.find({
+    surfaceArea: req.query.surfaceArea,
+  }).then((data) => {
+    res.json(data);
+  });
+});
+
 //Get a property by id
+// => localhost:3000/properties/654ad563f1a6e6066702d051
 router.get('/:id', (req: Request, res: Response) => {
   Property.findById(req.params.id).then((data) => {
     res.json(data);
   });
 });
-
 module.exports = router;
