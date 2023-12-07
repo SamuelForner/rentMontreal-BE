@@ -32,12 +32,22 @@ router.get('/all', (req: Request, res: Response) => {
   });
 });
 
-//Get property(ies) with filter
+//Get property(ies) with  optional filter
 // => localhost:3000/properties/filter?surfaceArea=1500m2
+// => localhost:3000/properties/filter?surfaceArea=1500m2&type=appartement
+// => localhost:3000/properties/filter
 router.get('/filter', (req: Request, res: Response) => {
-  Property.find({
-    surfaceArea: req.query.surfaceArea,
-  }).then((data) => {
+  let query: { [key: string]: any } = {};
+  if (req.query.type) {
+    query.type = req.query.type;
+  }
+  if (req.query.rooms) {
+    query.rooms = req.query.rooms;
+  }
+  if (req.query.surfaceArea) {
+    query.surfaceArea = req.query.surfaceArea;
+  }
+  Property.find(query).then((data) => {
     res.json(data);
   });
 });
