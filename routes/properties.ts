@@ -6,6 +6,7 @@ var express = require('express');
 
 var router = express.Router();
 
+//explication readMe
 router.post('/add', (req: Request, res: Response) => {
   const { title, type, rooms, surfaceArea, address, description, picture } =
     req.body as unknown as Iproperty;
@@ -19,12 +20,23 @@ router.post('/add', (req: Request, res: Response) => {
     description: description,
     picture: picture,
   });
-  newProperty.save().then((newProperty: Iproperty) => {
-    res.json({ newProperty });
-  });
+  console.log(newProperty);
+  newProperty
+    .save()
+    .then((newProperty: Iproperty) => {
+      res.json({ newProperty });
+    })
+    .catch((err: Error) => {
+      console.error(err);
+      res.status(500).json({
+        error: "Erreur lors de l'enregistrement de la propriété.",
+        err,
+      });
+    });
 });
 
 //Listing all properties
+//must add catch error to prevent closing server
 // => localhost:3000/properties/all
 router.get('/all', (req: Request, res: Response) => {
   Property.find().then((data: Iproperty[]) => {
@@ -33,6 +45,7 @@ router.get('/all', (req: Request, res: Response) => {
 });
 
 //Get property(ies) with  optional filter
+//must add catch error to prevent closing server
 // => localhost:3000/properties/filter?surfaceArea=1500m2
 // => localhost:3000/properties/filter?surfaceArea=1500m2&type=appartement
 // => localhost:3000/properties/filter
@@ -53,6 +66,7 @@ router.get('/filter', (req: Request, res: Response) => {
 });
 
 //Get a property by id
+//must add catch error to prevent closing server
 // => localhost:3000/properties/654ad563f1a6e6066702d051
 router.get('/:id', (req: Request, res: Response) => {
   Property.findById(req.params.id).then((data) => {
