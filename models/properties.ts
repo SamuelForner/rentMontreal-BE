@@ -5,7 +5,7 @@ const { Schema, Types, model } = mongoose;
 export interface Iproperty {
   title: string;
   type: string;
-  rooms: string;
+  rooms: number;
   surfaceArea: string;
   address: {
     street: string;
@@ -23,7 +23,7 @@ const propertySchema = new Schema<Iproperty>({
     required: true,
   },
   type: { type: String, required: true }, // appartement, maison, .. required
-  rooms: { type: String, required: true }, // nombre de pièce required
+  rooms: { type: Number, required: true }, // nombre de pièce required
   surfaceArea: { type: String, required: true }, // m2 required
   address: {
     street: { type: String, required: true },
