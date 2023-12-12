@@ -6,7 +6,8 @@ var express = require('express');
 
 var router = express.Router();
 
-//explication readMe
+//thunder client test please see readme.txt
+
 router.post('/add', (req: Request, res: Response) => {
   const { title, type, rooms, surfaceArea, address, description, picture } =
     req.body as unknown as Iproperty;
@@ -37,7 +38,6 @@ router.post('/add', (req: Request, res: Response) => {
 
 //Listing all properties
 //must add catch error to prevent closing server
-// => localhost:3000/properties/all
 router.get('/all', (req: Request, res: Response) => {
   Property.find().then((data: Iproperty[]) => {
     res.json(data);
@@ -45,10 +45,6 @@ router.get('/all', (req: Request, res: Response) => {
 });
 
 //Get property(ies) with  optional filter
-//must add catch error to prevent closing server
-// => localhost:3000/properties/filter?surfaceArea=1500m2
-// => localhost:3000/properties/filter?surfaceArea=1500m2&type=appartement
-// => localhost:3000/properties/filter
 router.get('/filter', (req: Request, res: Response) => {
   let query: { [key: string]: any } = {};
   if (req.query.type) {
@@ -60,17 +56,31 @@ router.get('/filter', (req: Request, res: Response) => {
   if (req.query.surfaceArea) {
     query.surfaceArea = req.query.surfaceArea;
   }
-  Property.find(query).then((data) => {
-    res.json(data);
-  });
+  Property.find(query)
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err: Error) => {
+      console.error(err);
+      res.status(500).json({
+        error: 'Erreur dans le filtrage',
+        err,
+      });
+    });
 });
 
 //Get a property by id
-//must add catch error to prevent closing server
-// => localhost:3000/properties/654ad563f1a6e6066702d051
 router.get('/:id', (req: Request, res: Response) => {
-  Property.findById(req.params.id).then((data) => {
-    res.json(data);
-  });
+  Property.findById(req.params.id)
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err: Error) => {
+      console.error(err);
+      res.status(500).json({
+        error: "La propriété n'a pas été trouvé'.",
+        err,
+      });
+    });
 });
 module.exports = router;
