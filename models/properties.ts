@@ -1,10 +1,12 @@
 import mongoose from 'mongoose';
 
+import { PropertyType } from '../interfaces/propertyInterface';
+
 const { Schema, Types, model } = mongoose;
 
 export interface Iproperty {
   title: string;
-  type: string;
+  type: PropertyType;
   rooms: number;
   surfaceArea: string;
   address: {
@@ -22,7 +24,7 @@ const propertySchema = new Schema<Iproperty>({
     type: String,
     required: true,
   },
-  type: { type: String, required: true }, // appartement, maison, .. required
+  type: { type: String, enum: PropertyType, required: true }, // appartement, maison,
   rooms: { type: Number, required: true }, // nombre de pièce required
   surfaceArea: { type: String, required: true }, // m2 required
   address: {
