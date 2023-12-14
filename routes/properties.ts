@@ -9,14 +9,23 @@ var router = express.Router();
 //thunder client test please see readme.txt
 
 router.post('/add', (req: Request, res: Response) => {
-  const { title, type, rooms, surfaceArea, address, description, picture } =
-    req.body as unknown as Iproperty;
+  const {
+    title,
+    type,
+    rooms,
+    surfaceArea,
+    isFurnished,
+    address,
+    description,
+    picture,
+  } = req.body as unknown as Iproperty;
 
   const newProperty = new Property({
     title: title,
     type: type,
     rooms: rooms,
     surfaceArea: surfaceArea,
+    isFurnished: isFurnished,
     address: address,
     description: description,
     picture: picture,
@@ -47,7 +56,8 @@ router.get('/all', (req: Request, res: Response) => {
 //Get property(ies) with  optional filter
 router.get('/filter', (req: Request, res: Response) => {
   let query: { [key: string]: any } = {};
-  const { type, rooms, surfaceAreaMin, surfaceAreaMax } = req.query;
+  const { type, rooms, surfaceAreaMin, surfaceAreaMax, isFurnished } =
+    req.query;
   //check if surfaceArea is in an interval for ex surfaceArea = x [10 < x < 100] = surfaceArea between 10 m2 & 100 m2
   const isSurfaceAreaInterval =
     surfaceAreaMax !== undefined && surfaceAreaMin !== undefined;
@@ -83,6 +93,11 @@ router.get('/filter', (req: Request, res: Response) => {
         });
     //I don't actually think that the user will specified a specific value to the surfaceArea like surfaceArea === 148m2
   }
+
+  if (isFurnished) {
+    query.isFurnished = isFurnished;
+  }
+
   Property.find(query)
     .then((data) => {
       res.json(data);

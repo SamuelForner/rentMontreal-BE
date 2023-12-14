@@ -9,6 +9,7 @@ export interface Iproperty {
   type: PropertyType;
   rooms: number;
   surfaceArea: number;
+  isFurnished: boolean;
   address: {
     street: string;
     city: string;
@@ -27,6 +28,7 @@ const propertySchema = new Schema<Iproperty>({
   type: { type: String, enum: PropertyType, required: true }, // appartement, maison,
   rooms: { type: Number, required: true }, // nombre de pièce required
   surfaceArea: { type: Number, required: true }, // m2 required
+  isFurnished: { type: Boolean, required: true }, // meublée ou non meublée
   address: {
     street: { type: String, required: true },
     city: { type: String, required: true },
