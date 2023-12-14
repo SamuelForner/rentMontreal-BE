@@ -47,14 +47,41 @@ router.get('/all', (req: Request, res: Response) => {
 //Get property(ies) with  optional filter
 router.get('/filter', (req: Request, res: Response) => {
   let query: { [key: string]: any } = {};
-  if (req.query.type) {
-    query.type = req.query.type;
+  const { type, rooms, surfaceAreaMin, surfaceAreaMax } = req.query;
+  //check if surfaceArea is in an interval for ex surfaceArea = x [10 < x < 100] = surfaceArea between 10 m2 & 100 m2
+  const isSurfaceAreaInterval =
+    surfaceAreaMax !== undefined && surfaceAreaMin !== undefined;
+
+  if (type) {
+    query.type = type;
   }
-  if (req.query.rooms) {
-    query.rooms = req.query.rooms;
+
+  if (rooms) {
+    query.rooms = rooms;
   }
-  if (req.query.surfaceArea) {
-    query.surfaceArea = req.query.surfaceArea;
+
+  if (
+    isSurfaceAreaInterval ||
+    (surfaceAreaMin && !isSurfaceAreaInterval) ||
+    (surfaceAreaMax && !isSurfaceAreaInterval)
+  ) {
+    //if surfaceArea is in an interval
+    query.surfaceArea =
+      (isSurfaceAreaInterval && {
+        $gte: surfaceAreaMin,
+        $lte: surfaceAreaMax,
+      }) ||
+      //if it is not in an interval but user required a min surfaceArea
+      (!isSurfaceAreaInterval &&
+        surfaceAreaMin !== undefined && {
+          $gte: surfaceAreaMin,
+        }) ||
+      //if it is not in an interval but user required a max surfaceArea
+      (!isSurfaceAreaInterval &&
+        surfaceAreaMax !== undefined && {
+          $lte: surfaceAreaMax,
+        });
+    //I don't actually think that the user will specified a specific value to the surfaceArea like surfaceArea === 148m2
   }
   Property.find(query)
     .then((data) => {
