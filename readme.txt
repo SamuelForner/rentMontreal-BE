@@ -30,6 +30,7 @@ Get property(ies) with  optional filter
 => localhost:3000/properties/filter?surfaceArea=1500m2
 => localhost:3000/properties/filter?type=Apartment&surfaceArea=1900m2
 => localhost:3000/properties/filter
+=> localhost:3000/properties/filter?type=House&isFurnished=true&surfaceAreaMin=20&surfaceAreaMax=300
 
 ////////////////////////////////////////////////
 router.get('/:id)
