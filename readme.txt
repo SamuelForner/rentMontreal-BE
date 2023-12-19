@@ -13,6 +13,10 @@ Body/JSON
       "postCode": "92300",
       "country": "Canada"
     },
+    "floor": 1,
+    "price": 1500,
+    "isChargesIncluded": true,
+    "accommodation": FlatShare,
     "description": "Jolie une pièce de 40m2",
     "picture": "https://img.freepik.com/photos-gratuite/salon-luxe-loft-etagere-pres-table-manger_105762-1796.jpg?w=826&t=st=1701385287~exp=1701385887~hmac=61f5ca868c9f7d0620ce878eed3b3ee44f90889fc418bd8824c8a03bc4a99f98"
   }

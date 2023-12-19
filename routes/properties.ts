@@ -16,6 +16,10 @@ router.post('/add', (req: Request, res: Response) => {
     surfaceArea,
     isFurnished,
     address,
+    floor,
+    price,
+    isChargesIncluded,
+    accommodation,
     description,
     picture,
   } = req.body as unknown as Iproperty;
@@ -27,10 +31,13 @@ router.post('/add', (req: Request, res: Response) => {
     surfaceArea: surfaceArea,
     isFurnished: isFurnished,
     address: address,
+    floor: floor,
+    price: price,
+    isChargesIncluded: isChargesIncluded,
+    accommodation: accommodation,
     description: description,
     picture: picture,
   });
-  console.log(newProperty);
   newProperty
     .save()
     .then((newProperty: Iproperty) => {

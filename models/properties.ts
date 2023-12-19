@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { PropertyType } from '../interfaces/propertyInterface';
+import { Accommodation, PropertyType } from '../interfaces/propertyInterface';
 
 const { Schema, Types, model } = mongoose;
 
@@ -16,6 +16,10 @@ export interface Iproperty {
     postCode: string;
     country: string;
   };
+  floor: number; // étage
+  price: number;
+  isChargesIncluded: boolean; //charges comprises dans le prix?
+  accommodation: Accommodation; //appartement entier/colocation
   description: string;
   picture?: string;
 }
@@ -25,19 +29,22 @@ const propertySchema = new Schema<Iproperty>({
     type: String,
     required: true,
   },
-  type: { type: String, enum: PropertyType, required: true }, // appartement, maison,
-  rooms: { type: Number, required: true }, // nombre de pièce required
-  surfaceArea: { type: Number, required: true }, // m2 required
-  isFurnished: { type: Boolean, required: true }, // meublée ou non meublée
+  type: { type: String, enum: PropertyType, required: true },
+  rooms: { type: Number, required: true },
+  surfaceArea: { type: Number, required: true },
+  isFurnished: { type: Boolean, required: true },
   address: {
     street: { type: String, required: true },
     city: { type: String, required: true },
     postCode: { type: String, required: true },
     country: { type: String, required: true },
-  }, //required
-  description: { type: String, required: true }, // bel appartement .. required
-  picture: String, //not required
+  },
+  floor: { type: Number, required: true },
+  price: { type: Number, required: true },
+  isChargesIncluded: { type: Boolean, required: true },
+  accommodation: { type: String, enum: Accommodation, required: true },
+  description: { type: String, required: true },
+  picture: String,
 });
-const Property = model<Iproperty>('properties', propertySchema);
 
 export default model<Iproperty>('properties', propertySchema);
