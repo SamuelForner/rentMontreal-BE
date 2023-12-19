@@ -63,20 +63,31 @@ router.get('/all', (req: Request, res: Response) => {
 //Get property(ies) with  optional filter
 router.get('/filter', (req: Request, res: Response) => {
   let query: { [key: string]: any } = {};
-  const { type, rooms, surfaceAreaMin, surfaceAreaMax, isFurnished } =
-    req.query;
+  const {
+    type,
+    rooms,
+    surfaceAreaMin,
+    surfaceAreaMax,
+    isFurnished,
+    floorMin,
+    floorMax,
+    priceMin,
+    priceMax,
+    isChargesIncluded,
+    accommodation,
+  } = req.query;
   //check if surfaceArea is in an interval for ex surfaceArea = x [10 < x < 100] = surfaceArea between 10 m2 & 100 m2
   const isSurfaceAreaInterval =
     surfaceAreaMax !== undefined && surfaceAreaMin !== undefined;
+  const isFloorInterval = floorMin !== undefined && floorMax !== undefined;
+  const isPriceInterval = priceMin !== undefined && priceMax !== undefined;
 
   if (type) {
     query.type = type;
   }
-
   if (rooms) {
     query.rooms = rooms;
   }
-
   if (
     isSurfaceAreaInterval ||
     (surfaceAreaMin && !isSurfaceAreaInterval) ||
@@ -100,11 +111,54 @@ router.get('/filter', (req: Request, res: Response) => {
         });
     //I don't actually think that the user will specified a specific value to the surfaceArea like surfaceArea === 148m2
   }
-
   if (isFurnished) {
     query.isFurnished = isFurnished;
   }
-
+  if (
+    isFloorInterval ||
+    (!isFloorInterval && floorMin) ||
+    (!isFloorInterval && floorMax)
+  ) {
+    query.floor =
+      (isFloorInterval && {
+        $gte: floorMin,
+        $lte: floorMax,
+      }) ||
+      (!isFloorInterval &&
+        floorMin !== undefined && {
+          $gte: floorMin,
+        }) ||
+      (!isFloorInterval &&
+        floorMax !== undefined && {
+          $lte: floorMax,
+        });
+    //if the query is a specific floor (for example floor 2, just put floorMin = 2 & floorMax = 2)
+  }
+  if (
+    isPriceInterval ||
+    (!isPriceInterval && priceMin) ||
+    (!isPriceInterval && priceMax)
+  ) {
+    query.price =
+      (isPriceInterval && {
+        $gte: priceMin,
+        $lte: priceMax,
+      }) ||
+      (!isPriceInterval &&
+        priceMin !== undefined && {
+          $gte: priceMin,
+        }) ||
+      (!isPriceInterval &&
+        priceMax !== undefined && {
+          $lte: priceMax,
+        });
+  }
+  if (isChargesIncluded) {
+    query.isChargesIncluded = isChargesIncluded;
+  }
+  if (accommodation) {
+    query.accommodation = accommodation;
+  }
   Property.find(query)
     .then((data) => {
       res.json(data);
