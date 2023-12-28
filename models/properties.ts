@@ -7,7 +7,7 @@ const { Schema, Types, model } = mongoose;
 export interface Iproperty {
   title: string;
   type: PropertyType;
-  rooms: number;
+  livingArea: number;
   surfaceArea: number;
   isFurnished: boolean;
   address: {
@@ -30,7 +30,7 @@ const propertySchema = new Schema<Iproperty>({
     required: true,
   },
   type: { type: String, enum: PropertyType, required: true },
-  rooms: { type: Number, required: true },
+  livingArea: { type: Number, required: true },
   surfaceArea: { type: Number, required: true },
   isFurnished: { type: Boolean, required: true },
   address: {

@@ -4,7 +4,7 @@ Body/JSON
 {
     "title": "test",
     "type": "Apartment",
-    "rooms": 1,
+    "livingArea": 1,
     "surfaceArea": 40,
     "isFurnished": true,
     "address": {
