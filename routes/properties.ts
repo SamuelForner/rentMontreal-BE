@@ -12,7 +12,7 @@ router.post('/add', (req: Request, res: Response) => {
   const {
     title,
     type,
-    rooms,
+    livingArea,
     surfaceArea,
     isFurnished,
     address,
@@ -27,7 +27,7 @@ router.post('/add', (req: Request, res: Response) => {
   const newProperty = new Property({
     title: title,
     type: type,
-    rooms: rooms,
+    livingArea: livingArea,
     surfaceArea: surfaceArea,
     isFurnished: isFurnished,
     address: address,
@@ -65,7 +65,7 @@ router.get('/filter', (req: Request, res: Response) => {
   let query: { [key: string]: any } = {};
   const {
     type,
-    rooms,
+    livingArea,
     surfaceAreaMin,
     surfaceAreaMax,
     isFurnished,
@@ -85,8 +85,8 @@ router.get('/filter', (req: Request, res: Response) => {
   if (type) {
     query.type = type;
   }
-  if (rooms) {
-    query.rooms = rooms;
+  if (livingArea) {
+    query.livingArea = livingArea;
   }
   if (
     isSurfaceAreaInterval ||
