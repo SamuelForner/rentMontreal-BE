@@ -73,7 +73,6 @@ router.get('/filter', (req: Request, res: Response) => {
     floorMax,
     priceMin,
     priceMax,
-    isChargesIncluded,
     accommodation,
   } = req.query;
   //check if surfaceArea is in an interval for ex surfaceArea = x [10 < x < 100] = surfaceArea between 10 m2 & 100 m2
@@ -152,9 +151,6 @@ router.get('/filter', (req: Request, res: Response) => {
         priceMax !== undefined && {
           $lte: priceMax,
         });
-  }
-  if (isChargesIncluded) {
-    query.isChargesIncluded = isChargesIncluded;
   }
   if (accommodation) {
     query.accommodation = accommodation;
