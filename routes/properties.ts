@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
-import Property, { Iproperty } from '../models/properties';
+import { Iproperty } from '../interfaces/propertyInterface';
+import Property from '../models/properties';
 
 var express = require('express');
 
