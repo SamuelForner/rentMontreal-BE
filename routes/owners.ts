@@ -10,7 +10,8 @@ var router = express.Router();
 
 router.post('/signup', async (req: Request, res: Response) => {
   try {
-    const { email, password, lastName, firstName } = req.body as Iowner;
+    const { email, password, lastName, firstName, phoneNumber } =
+      req.body as Iowner;
     //check if owner has already registered
     const existingOwner = await Owner.findOne({ email });
     //if already registered
@@ -26,6 +27,7 @@ router.post('/signup', async (req: Request, res: Response) => {
       password: hashedPassword,
       lastName: lastName,
       firstName: firstName,
+      phoneNumber: phoneNumber,
     });
     await newOwner.save().then((newOwner: Iowner) => {
       res.json({ newOwner, message: 'Owner registered successfully' });
