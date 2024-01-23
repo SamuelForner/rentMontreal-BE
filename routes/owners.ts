@@ -33,8 +33,7 @@ router.post('/signup', async (req: Request, res: Response) => {
       res.json({ newOwner, message: 'Owner registered successfully' });
     });
   } catch (error) {
-    console.error('Error registering owner:', error);
-    res.status(500).json({ message: "erreur d'enregistrement", error });
+    if (error instanceof Error) res.status(500).json({ error: error.message });
   }
 });
 
@@ -56,10 +55,21 @@ router.post('/signin', async (req: Request, res: Response) => {
     //generate JWT Token
     //this token will be usefull client side to allows for example not to sign in each time
     const token = jwt.sign({ ownerId: owner.id }, 'secretKey');
-    res.status(200).json({ token });
+    res
+      .status(200)
+      .json({ token, owner: { id: owner.id, username: owner.firstName } });
   } catch (error) {
-    console.error('error loggin in ', error);
-    res.status(500).json({ error: 'An error occurred while logging in' });
+    if (error instanceof Error) res.status(500).json({ error: error.message });
+  }
+});
+
+//Check if token from signin is valid
+router.post('/isTokenValid', async (req: Request, res: Response) => {
+  try {
+    const token = req.header('x-auth-token');
+    console.log(token);
+  } catch (error) {
+    if (error instanceof Error) res.status(500).json({ error: error.message });
   }
 });
 
