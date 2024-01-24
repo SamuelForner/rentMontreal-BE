@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { Iowner } from '../interfaces/ownerInterface';
 import Owner from '../models/owners';
 
+const auth = require('../middleware/ownerauth.ts');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 var express = require('express');
@@ -66,11 +67,33 @@ router.post('/signin', async (req: Request, res: Response) => {
 //Check if token from signin is valid
 router.post('/isTokenValid', async (req: Request, res: Response) => {
   try {
+    // after signin serverside send token to clientside, clientside set token to the localStorage
+    // we retrieve this token and verified it
     const token = req.header('x-auth-token');
-    console.log(token);
+    if (!token) {
+      return res.json(false);
+    }
+    //the token is link with the owner id cf signin
+    const verifiedToken = jwt.verify(token, 'secretKey');
+    if (!verifiedToken) {
+      return res.json(false);
+    }
+    const owner = await Owner.findById(verifiedToken.ownerId);
+    if (!owner) {
+      return res.json(false);
+    }
+    if (owner) {
+      return res.json(true);
+    }
   } catch (error) {
     if (error instanceof Error) res.status(500).json({ error: error.message });
   }
+});
+
+//get owner data
+router.get('/', auth, async (req: Request, res: Response) => {
+  console.log(req);
+  //working on get owner info
 });
 
 module.exports = router;
