@@ -1,8 +1,14 @@
-import { Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
+
+import { IGetUserAuthInfoRequest } from '../interfaces/ownerInterface';
 
 const jwt = require('jsonwebtoken');
 
-const auth = async (req: Request, res: Response) => {
+const auth = async (
+  req: IGetUserAuthInfoRequest,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const token = req.header('x-auth-token');
     if (!token) {
@@ -13,9 +19,8 @@ const auth = async (req: Request, res: Response) => {
       return res.json({ message: 'false token, access denied' });
     }
     if (verifiedToken) {
-      // req.owner = verifiedToken.id;
-      // need to add the verifiedtoken id to the req
-      console.log(req);
+      req.owner = verifiedToken.ownerId;
+      next();
     }
   } catch (error) {
     if (error instanceof Error) res.status(500).json({ error: error.message });

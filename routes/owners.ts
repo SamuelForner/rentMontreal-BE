@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { Iowner } from '../interfaces/ownerInterface';
+import { IGetUserAuthInfoRequest, Iowner } from '../interfaces/ownerInterface';
 import Owner from '../models/owners';
 
 const auth = require('../middleware/ownerauth.ts');
@@ -91,9 +91,9 @@ router.post('/isTokenValid', async (req: Request, res: Response) => {
 });
 
 //get owner data
-router.get('/', auth, async (req: Request, res: Response) => {
-  console.log(req);
-  //working on get owner info
+router.get('/', auth, async (req: IGetUserAuthInfoRequest, res: Response) => {
+  const owner = await Owner.findById(req.owner);
+  res.json(owner);
 });
 
 module.exports = router;

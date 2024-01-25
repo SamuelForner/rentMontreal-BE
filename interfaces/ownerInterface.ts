@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 export interface Iowner {
   firstName: string;
   lastName: string;
@@ -6,4 +8,8 @@ export interface Iowner {
   phoneNumber: string;
   createdAt: Date;
   comparePassword: (password: string) => Promise<boolean>;
+}
+
+export interface IGetUserAuthInfoRequest extends Request {
+  owner: string;
 }
