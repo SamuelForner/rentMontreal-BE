@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import { Iproperty } from '../interfaces/propertyInterface';
+import Owner from '../models/owners';
 import Property from '../models/properties';
 
 var express = require('express');
@@ -9,7 +10,7 @@ var router = express.Router();
 
 //thunder client test please see readme.txt
 
-router.post('/add', (req: Request, res: Response) => {
+router.post('/add', async (req: Request, res: Response) => {
   const {
     title,
     type,
@@ -23,8 +24,12 @@ router.post('/add', (req: Request, res: Response) => {
     accommodation,
     description,
     picture,
+    ownerId,
   } = req.body as unknown as Iproperty;
-
+  const owner = await Owner.findById(ownerId);
+  if (!owner) {
+    return res.status(404).json({ message: 'Propriétaire inexistant' });
+  }
   const newProperty = new Property({
     title: title,
     type: type,
@@ -38,6 +43,7 @@ router.post('/add', (req: Request, res: Response) => {
     accommodation: accommodation,
     description: description,
     picture: picture,
+    ownerId: ownerId,
   });
   newProperty
     .save()
@@ -169,7 +175,31 @@ router.get('/filter', (req: Request, res: Response) => {
     });
 });
 
-//Get a property by id
+//Get a property(ies) by owner id
+router.get('/ownerId', async (req: Request, res: Response) => {
+  try {
+    const ownerId = req.body;
+    const owner = await Owner.findById(ownerId);
+    if (!owner) {
+      return res.status(404).json({ message: 'Propriétaire inexistant' });
+    }
+    await Property.find({ ownerId: ownerId })
+      .then((data) => {
+        res.json(data);
+      })
+      .catch((err: Error) => {
+        console.error(err);
+        res.status(500).json({
+          error: "La propriété n'a pas été trouvé'.",
+          err,
+        });
+      });
+  } catch (error) {
+    if (error instanceof Error) res.status(500).json({ error: error.message });
+  }
+});
+
+//Get a property by property id
 router.get('/:id', (req: Request, res: Response) => {
   Property.findById(req.params.id)
     .then((data) => {

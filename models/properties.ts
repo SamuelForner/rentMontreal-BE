@@ -29,6 +29,7 @@ const propertySchema = new Schema<Iproperty>({
   accommodation: { type: String, enum: Accommodation, required: true },
   description: { type: String, required: true },
   picture: String,
+  ownerId: { type: Schema.Types.ObjectId, ref: 'Owner' },
 });
 
 export default model<Iproperty>('properties', propertySchema);

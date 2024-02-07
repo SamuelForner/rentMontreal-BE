@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongoose';
+
 export enum PropertyType {
   Apartment = 'Apartment',
   House = 'House',
@@ -26,4 +28,5 @@ export interface Iproperty {
   accommodation: Accommodation; //appartement entier/colocation
   description: string;
   picture?: string;
+  ownerId?: ObjectId; // Une propriété est lié à un et un seul owner
 }
