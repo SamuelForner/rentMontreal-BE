@@ -176,14 +176,13 @@ router.get('/filter', (req: Request, res: Response) => {
 });
 
 //Get a property(ies) by owner id
-router.get('/ownerId', async (req: Request, res: Response) => {
+router.get('/ownerproperties/:ownerId', async (req: Request, res: Response) => {
   try {
-    const ownerId = req.body;
-    const owner = await Owner.findById(ownerId);
+    const owner = await Owner.findById(req.params.ownerId);
     if (!owner) {
       return res.status(404).json({ message: 'Propriétaire inexistant' });
     }
-    await Property.find({ ownerId: ownerId })
+    await Property.find({ ownerId: req.params.ownerId })
       .then((data) => {
         res.json(data);
       })
